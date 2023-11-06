@@ -49,11 +49,24 @@ app.get('/blogs/:id',async(req,res)=>{
     const result=await blogscollection.findOne(filter)
     res.send(result)
 })
+app.get('/wishlist/:id',async(req,res)=>{
+    const id=req.params.id
+    const filter={_id:new ObjectId(id)}
+    const result=await wishlistcollection.findOne(filter)
+    res.send(result)
+})
 
 app.post('/wishlist',async(req,res)=>{
     const data=req.body
     const result=await wishlistcollection.insertOne(data)
     res.send(result)
+})
+
+app.delete('/wishlist/:id',async(req,res)=>{
+  const id=req.params.id
+  const filter={_id:new ObjectId(id)}
+  const result=await wishlistcollection.deleteOne(filter)
+  res.send(result)
 })
 
 app.get('/wishlist',async(req,res)=>{
