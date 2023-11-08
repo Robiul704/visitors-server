@@ -116,14 +116,6 @@ app.get('/comments/:id',async(req,res)=>{
     const result=await commentscollection.find(filter).toArray()
     res.send(result)
 })
-
-
-
-
-
-
-
-
 app.get('/update/:id',async(req,res)=>{
     const id=req.params.id
     const filter={_id:new ObjectId(id)}
