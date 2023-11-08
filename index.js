@@ -1,13 +1,19 @@
 const express = require('express')
 const cors=require('cors')
 const app = express()
+const jwt=require('jsonwebtoken')
 require('dotenv').config()
+const cookieParser = require('cookie-parser')
 const port = process.env.PORT || 5000
 
 
 // midlewer 
-app.use(cors())
+app.use(cors({
+  origin:[`http://localhost:5173`],
+  credentials:true
+}))
 app.use(express.json())
+app.use(cookieParser())
 
 
 const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
@@ -21,6 +27,27 @@ const client = new MongoClient(uri, {
     deprecationErrors: true,
   }
 });
+
+const logger=async(req,res,next)=>{
+  next()
+}
+
+const varyfytoken=async(req,res,next)=>{
+  const token=req.cookies?.token
+  console.log('value of token',token)
+  if(!token){
+    return res.status(401).send({message:'not authoriszed'})
+  }
+  jwt.verify(token,process.env.ACCESS_TOKEN_SECRET,(err,decoded)=>{
+    if(err){
+      console.log(err)
+      return res.status(401).send({message:' its unauthoriszed'})
+    }
+     req.user=decoded
+    console.log('this is authoriszed',decoded)
+    next()
+  })
+}
 
 async function run() {
   try {
@@ -97,6 +124,20 @@ app.get('/update/:id',async(req,res)=>{
     const result=await blogscollection.findOne(filter)
     res.send(result)
 })
+
+app.post('/jwt',logger ,async(req,res)=>{
+  const user=req.body
+  console.log(user)
+  console.log(user)
+  const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1h'})
+  res
+  .cookie('token',token,{
+    httpOnly:true,
+    secure:false
+  })
+  .send({success:true})
+})
+
 
 // app.put('/blogs/:id',async(req,res)=>{
 //     const id=req.params.id
