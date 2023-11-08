@@ -7,6 +7,9 @@ const cookieParser = require('cookie-parser')
 const port = process.env.PORT || 5000
 
 
+
+
+
 // midlewer 
 app.use(cors({
   origin:[`http://localhost:5173`],
