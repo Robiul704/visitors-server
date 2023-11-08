@@ -125,39 +125,62 @@ app.get('/update/:id',async(req,res)=>{
     res.send(result)
 })
 
-app.post('/jwt',logger ,async(req,res)=>{
-  const user=req.body
-  console.log(user)
-  console.log(user)
-  const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1h'})
-  res
-  .cookie('token',token,{
-    httpOnly:true,
-    secure:false
-  })
-  .send({success:true})
-})
-
-
-// app.put('/blogs/:id',async(req,res)=>{
-//     const id=req.params.id
-//     const filter={_id:new ObjectId(id)}
-//     const option={upsert:true}
-//     const body=req.body
-
-//     const updatenew={
-//         $set:{
-//             title:body.title,
-//             category:body.category,
-//             shortdescription:body.shortdescription,
-//             longdescription:body.shortdescription,
-//             image:body.image
-//         }
-//     }
-//     const result=await blogscollection.updateOne(filter,option,updatenew)
-//     res.send(result)
-  
+// app.post('/jwt',logger ,async(req,res)=>{
+//   const user=req.body
+//   console.log(user)
+//   console.log(user)
+//   const token=jwt.sign(user,process.env.ACCESS_TOKEN_SECRET,{expiresIn:'1h'})
+//   res
+//   .cookie('token',token,{
+//     httpOnly:true,
+//     secure:false
+//   })
+//   .send({success:true})
 // })
+
+
+// app.put('/product/:id',async(req,res)=>{
+//   const query=req.params.id
+//   const filter={_id:new ObjectId(query)}
+//   const option={upsert:true}
+//   const body=req.body
+//   console.log(body)
+//   const updatenew={
+//     $set:{
+//       name:body.name,
+//       image:body.image,
+//       price:body.price,
+//       brand:body.brand,
+//       type:body.type,
+//       rating:body.rating,
+//       description:body.description,
+//     }
+//   }
+//   const result=await productcollection.updateOne(filter,updatenew,option)
+//   res.send(result)
+// })
+
+
+app.put('/blogs/:id',async(req,res)=>{
+    const id=req.params.id
+    const filter={_id:new ObjectId(id)}
+    const option={upsert:true}
+    const body=req.body
+    console.log(body)
+
+    const updatenew={
+        $set:{
+            title:body.title,
+            category:body.category,
+            shortdescription:body.shortdescription,
+            longdescription:body.longdescription,
+            image:body.image
+        }
+    }
+    const result=await blogscollection.updateOne(filter,option,updatenew)
+    res.send(result)
+  
+})
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
